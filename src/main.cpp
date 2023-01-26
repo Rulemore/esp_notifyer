@@ -11,9 +11,9 @@ struct Users {
   int whiteList[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 };
 
-String ssid = "Max";
-String pass = "ML87654312";
-String token = "5615772589:AAGcIAbw9yV9phRY9TjPt1E0dnVK6yP1O_U";
+String ssid = "";
+String pass = "";
+String token = "";
 bool isFull = false;
 int adress = 0;
 
@@ -24,7 +24,7 @@ void newMsg(FB_msg& msg);
 bool inWiteList(String id);
 void addToWhiteList(String id);
 void delFromWhiteList(String id);
-void sendNotification();
+void sendNotification(String text);
 void checkStatus(String id);
 
 void setup() {
@@ -43,6 +43,7 @@ void setup() {
   Serial.println(WiFi.localIP());
   bot.notify(true);
   bot.attach(newMsg);
+  sendNotification("Колодец перезагружен");
 }
 
 void newMsg(FB_msg& msg) {
@@ -113,10 +114,10 @@ void delFromWhiteList(String id) {
   EEPROM.commit();
 }
 
-void sendNotification() {
+void sendNotification(String text) {
   for (int i = 0; i < users.whiteListed; i++) {
     bot.setChatID(users.whiteList[i]);
-    bot.sendMessage("Колодец переполнен");
+    bot.sendMessage(text);
   }
 }
 
@@ -139,7 +140,7 @@ void smartdelay(unsigned long ms) {
 void loop() {
   bot.tick();
   if (digitalRead(sensorPin) == 0 && !isFull) {
-    sendNotification();
+    sendNotification("Колодец переполнен");
     isFull = true;
     smartdelay(500);
   }
