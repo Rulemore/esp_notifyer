@@ -29,6 +29,7 @@ void checkStatus(String id);
 
 void setup() {
   EEPROM.begin(sizeof(users));
+  // EEPROM.put(adress, users);
   EEPROM.get(adress, users);
   EEPROM.commit();
   Serial.begin(115200);
@@ -84,6 +85,7 @@ void addToWhiteList(String id) {
   EEPROM.begin(sizeof(users));
   EEPROM.put(adress, users);
   EEPROM.commit();
+  return;
 }
 
 void delFromWhiteList(String id) {
@@ -112,6 +114,7 @@ void delFromWhiteList(String id) {
   EEPROM.begin(sizeof(users));
   EEPROM.put(adress, users);
   EEPROM.commit();
+  return;
 }
 
 void sendNotification(String text) {
@@ -138,6 +141,7 @@ void smartdelay(unsigned long ms) {
 }
 
 void loop() {
+  bot.setChatID(0);
   bot.tick();
   if (digitalRead(sensorPin) == 0 && !isFull) {
     sendNotification("Колодец переполнен");
